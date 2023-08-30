@@ -1,5 +1,5 @@
 {
-  "name": "newton-paiva",
+  "name": "radiologia-newton",
   "version": "1.0.0",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
@@ -9,13 +9,17 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@expo/vector-icons": "^13.0.0",
     "expo": "~49.0.8",
     "expo-status-bar": "~1.6.0",
     "react": "18.2.0",
-    "react-native": "0.72.4"
+    "react-native": "0.72.4",
+    "react-native-paper": "^5.10.3",
+    "expo-constants": "~14.4.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.0"
+    "@babel/core": "^7.20.0",
+    "eslint-config-js-stack": "^1.0.5"
   },
   "private": true
 }

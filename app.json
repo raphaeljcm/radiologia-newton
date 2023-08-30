@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "newton-paiva",
-    "slug": "newton-paiva",
+    "name": "radiologia-newton",
+    "slug": "radiologia-newton",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

@@ -3,6 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { MenuScreen } from './menus/MenuScreen';
 import { LoginScreen } from './login/LoginScreen';
 import { HomeScreen } from './home/HomeScreen';
+import { XRayScreen } from './xray/XRayScreen';
 
 const LOGIN_OPTIONS = {
   login: {
@@ -13,6 +14,9 @@ const LOGIN_OPTIONS = {
   },
   menu: {
     title: 'Anatomia',
+  },
+  xray: {
+    title: 'Raio-X',
   },
 };
 
@@ -36,6 +40,11 @@ export default function App() {
           name="menu"
           component={MenuScreen}
           options={LOGIN_OPTIONS.menu}
+        />
+        <Stack.Screen
+          name="xray"
+          component={XRayScreen}
+          options={LOGIN_OPTIONS.xray}
         />
       </Stack.Navigator>
     </NavigationContainer>

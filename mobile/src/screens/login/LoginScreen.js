@@ -1,10 +1,10 @@
 import { View, StyleSheet, Image, Text } from 'react-native';
 import { Button, TextInput } from 'react-native-paper';
 import { useState } from 'react';
-import { login } from '../services/login';
+import { login } from '../../../services/login';
 
-import logo from '../assets/radiologia.png';
-import { GoogleLogoIcon } from '../components/GoogleLogoIcon';
+import logo from '../../../assets/radiologia.png';
+import { GoogleLogoIcon } from '../../components/GoogleLogoIcon';
 
 export function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');

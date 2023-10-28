@@ -1,9 +1,9 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { MenuScreen } from './menus/MenuScreen';
-import { LoginScreen } from './login/LoginScreen';
-import { HomeScreen } from './home/HomeScreen';
-import { XRayScreen } from './xray/XRayScreen';
+import { MenuScreen } from './src/screens/menu/MenuScreen';
+import { LoginScreen } from './src/screens/login/LoginScreen';
+import { HomeScreen } from './src/screens/home/HomeScreen';
+import { XRayScreen } from './src/screens/xray/XRayScreen';
 
 const LOGIN_OPTIONS = {
   login: {

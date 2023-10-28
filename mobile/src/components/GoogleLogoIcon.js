@@ -1,5 +1,5 @@
 import { Image, StyleSheet, TouchableOpacity } from 'react-native';
-import logoGoogle from '../assets/logo-google.png';
+import logoGoogle from '../../assets/logo-google.png';
 
 export function GoogleLogoIcon() {
   return (

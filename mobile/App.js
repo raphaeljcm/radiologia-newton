@@ -4,9 +4,13 @@ import { MenuScreen } from './src/screens/menu/MenuScreen';
 import { LoginScreen } from './src/screens/login/LoginScreen';
 import { HomeScreen } from './src/screens/home/HomeScreen';
 import { XRayScreen } from './src/screens/xray/XRayScreen';
+import { RegisterScreen } from './src/screens/register/RegisterScreen';
 
 const LOGIN_OPTIONS = {
   login: {
+    headerShown: false,
+  },
+  register: {
     headerShown: false,
   },
   home: {
@@ -30,6 +34,11 @@ export default function App() {
           name="login"
           component={LoginScreen}
           options={LOGIN_OPTIONS.login}
+        />
+        <Stack.Screen
+          name="register"
+          component={RegisterScreen}
+          options={LOGIN_OPTIONS.register}
         />
         <Stack.Screen
           name="home"

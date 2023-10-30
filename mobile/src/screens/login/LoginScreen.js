@@ -1,10 +1,8 @@
 import { View, StyleSheet, Image, Text } from 'react-native';
 import { Button, TextInput } from 'react-native-paper';
 import { useState } from 'react';
-import { login } from '../../../services/login';
-
+import { login } from '../../services/login';
 import logo from '../../../assets/radiologia.png';
-import { GoogleLogoIcon } from '../../components/GoogleLogoIcon';
 
 export function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
@@ -21,6 +19,10 @@ export function LoginScreen({ navigation }) {
     }
 
     navigation.navigate('home');
+  }
+
+  function handleRegister() {
+    navigation.navigate('register');
   }
 
   return (
@@ -54,11 +56,13 @@ export function LoginScreen({ navigation }) {
           Entrar
         </Button>
 
-        <Text style={styles.register}>Cadastre-se</Text>
-
-        <Text style={styles.register}> ──────── Ou continue com ────────</Text>
-
-        <GoogleLogoIcon />
+        <Button
+          style={styles.register}
+          textColor="#193073"
+          onPress={handleRegister}
+        >
+          Cadastre-se
+        </Button>
 
         {!!error && <Text style={styles.error}>{error}</Text>}
       </View>

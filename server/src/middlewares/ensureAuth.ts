@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { verify } from 'jsonwebtoken';
+import { queryDatabase } from '../db';
 
 export async function ensureAuth(
   req: Request,
@@ -15,7 +16,13 @@ export async function ensureAuth(
   try {
     const { sub } = verify(token, process.env.JWT_SECRET!);
 
-    // check if user exists
+    const users = await queryDatabase('SELECT * FROM users u WHERE u.id = ?', [
+      sub,
+    ]);
+
+    if (!users || users.length === 0) {
+      return res.status(404).json({ error: 'User does not exist' });
+    }
 
     next();
   } catch {

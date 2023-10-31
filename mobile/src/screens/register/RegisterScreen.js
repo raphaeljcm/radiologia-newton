@@ -1,15 +1,18 @@
 import { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Alert } from 'react-native';
 import { Button, Text, TextInput } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { api } from '../../lib/axios';
+import { AppError } from '../../utils/AppError';
 
-export function RegisterScreen() {
+export function RegisterScreen({ navigation }) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [ra, setRa] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(true);
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   async function handleRegister() {
     if (!name || !email || !ra || !password) {
@@ -17,7 +20,29 @@ export function RegisterScreen() {
       return;
     }
 
-    setError('');
+    try {
+      setError('');
+      setLoading(true);
+      await api.post('/register', {
+        name,
+        email,
+        ra,
+        password,
+        image: null,
+      });
+
+      setLoading(false);
+      navigation.navigate('login');
+    } catch (err) {
+      setLoading(false);
+
+      const isAppError = err instanceof AppError;
+      const title = isAppError
+        ? err.message
+        : 'Não foi possível criar a conta. Tente novamente mais tarde.';
+
+      Alert.alert(title);
+    }
   }
 
   return (
@@ -54,6 +79,7 @@ export function RegisterScreen() {
           buttonColor="#193073"
           textColor="white"
           onPress={handleRegister}
+          loading={loading}
         >
           Cadastrar
         </Button>

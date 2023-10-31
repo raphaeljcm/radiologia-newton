@@ -1,24 +1,44 @@
 import { View, StyleSheet, Image, Text } from 'react-native';
 import { Button, TextInput } from 'react-native-paper';
 import { useState } from 'react';
-import { login } from '../../services/login';
+import { api } from '../../lib/axios';
 import logo from '../../../assets/radiologia.png';
+import { AppError } from '../../utils/AppError';
 
 export function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   async function handleLogin() {
-    const result = await login(email, password);
-
-    if (result.error) {
-      setError(result.error);
+    if (!email || !password) {
+      setError('Preencha todos os campos');
       return;
     }
 
-    navigation.navigate('home');
+    try {
+      setError('');
+      setLoading(true);
+
+      await api.post('/login', {
+        email,
+        password,
+      });
+
+      setLoading(false);
+      navigation.navigate('home');
+    } catch (err) {
+      setLoading(false);
+
+      const isAppError = err instanceof AppError;
+      const title = isAppError
+        ? err.message
+        : 'Não foi possível entrar no aplicativo. Tente novamente mais tarde.';
+
+      Alert.alert(title);
+    }
   }
 
   function handleRegister() {
@@ -52,6 +72,7 @@ export function LoginScreen({ navigation }) {
           buttonColor="#193073"
           textColor="white"
           onPress={handleLogin}
+          loading={loading}
         >
           Entrar
         </Button>

@@ -1,4 +1,4 @@
-import { View, StyleSheet, Image, Text } from 'react-native';
+import { View, StyleSheet, Image, Text, Alert } from 'react-native';
 import { Button, TextInput } from 'react-native-paper';
 import { useState } from 'react';
 import { api } from '../../lib/axios';

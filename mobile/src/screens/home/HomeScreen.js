@@ -1,42 +1,24 @@
 import { FlatList, StyleSheet, View } from 'react-native';
 import { MenuItem } from './MenuItem';
-
-const MENU_ITEMS = [
-  {
-    id: 1,
-    title: 'Anatomia',
-    icon: 'body',
-  },
-  {
-    id: 2,
-    title: 'Patologia',
-    icon: 'body',
-  },
-  {
-    id: 3,
-    title: 'Alterações dentárias',
-    icon: 'body',
-  },
-  {
-    id: 4,
-    title: 'Testes',
-    icon: 'body',
-  },
-];
+import { MENU_ITEMS } from '../../constants';
 
 export function HomeScreen({ navigation }) {
+  const handleMenuItemClick = item => {
+    navigation.navigate('menu', { selectedItems: item.children });
+  };
+
   return (
     <View style={styles.container}>
       <FlatList
-        data={MENU_ITEMS}
+        data={Object.values(MENU_ITEMS)}
         renderItem={({ item }) => (
           <MenuItem
-            title={item.title}
-            icon={item.icon}
-            onPress={() => navigation.navigate('menu')}
+            title={item.label}
+            icon="body"
+            onPress={() => handleMenuItemClick(item)}
           />
         )}
-        keyExtractor={item => item.id.toString()}
+        keyExtractor={item => item.label}
         numColumns={2}
       />
     </View>

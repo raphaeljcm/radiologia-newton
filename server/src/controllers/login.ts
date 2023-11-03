@@ -41,6 +41,7 @@ export async function login(req: Request, res: Response) {
       token,
       user: {
         email: user.email,
+        name: user.name,
       },
     };
 

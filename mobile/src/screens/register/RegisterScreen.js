@@ -1,28 +1,52 @@
-import { useState } from 'react';
+import { useReducer } from 'react';
 import { View, StyleSheet, Alert } from 'react-native';
 import { Button, Text, TextInput } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { api } from '../../lib/axios';
 import { AppError } from '../../utils/AppError';
+import { useNavigation } from '@react-navigation/native';
 
-export function RegisterScreen({ navigation }) {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [ra, setRa] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(true);
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+const INITIAL_STATE = {
+  name: '',
+  email: '',
+  ra: '',
+  password: '',
+  showPassword: true,
+  error: '',
+  loading: false,
+};
+
+function reducer(state, action) {
+  switch (action.type) {
+    case 'updateField':
+      return { ...state, [action.field]: action.value };
+    case 'setError':
+      return { ...state, error: action.error };
+    case 'setLoading':
+      return { ...state, loading: action.loading };
+    case 'reset':
+      return initialState;
+    default:
+      return state;
+  }
+}
+
+export function RegisterScreen() {
+  const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
+  const navigation = useNavigation();
 
   async function handleRegister() {
+    const { name, email, ra, password } = state;
+
     if (!name || !email || !ra || !password) {
-      setError('Preencha todos os campos');
+      dispatch({ type: 'setError', error: 'Preencha todos os campos' });
       return;
     }
 
     try {
-      setError('');
-      setLoading(true);
+      dispatch({ type: 'setError', error: '' });
+      dispatch({ type: 'setLoading', loading: true });
+
       await api.post('/register', {
         name,
         email,
@@ -31,10 +55,10 @@ export function RegisterScreen({ navigation }) {
         image: null,
       });
 
-      setLoading(false);
+      dispatch({ type: 'setLoading', loading: false });
       navigation.navigate('login');
     } catch (err) {
-      setLoading(false);
+      dispatch({ type: 'setLoading', loading: false });
 
       const isAppError = err instanceof AppError;
       const title = isAppError
@@ -45,6 +69,18 @@ export function RegisterScreen({ navigation }) {
     }
   }
 
+  const handleChange = (field, value) => {
+    dispatch({ type: 'updateField', field, value });
+  };
+
+  const toggleShowPassword = () => {
+    dispatch({
+      type: 'updateField',
+      field: 'showPassword',
+      value: !state.showPassword,
+    });
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <Text variant="headlineLarge">Cadastre-se</Text>
@@ -52,24 +88,28 @@ export function RegisterScreen({ navigation }) {
       <View style={styles.actionContainer}>
         <TextInput
           label="Nome"
-          onChangeText={text => setName(text)}
-          value={name}
+          onChangeText={text => handleChange('name', text)}
+          value={state.name}
         />
         <TextInput
           label="E-mail"
-          onChangeText={text => setEmail(text)}
-          value={email}
+          onChangeText={text => handleChange('email', text)}
+          value={state.email}
         />
-        <TextInput label="RA" onChangeText={text => setRa(text)} value={ra} />
+        <TextInput
+          label="RA"
+          onChangeText={text => handleChange('ra', text)}
+          value={state.ra}
+        />
         <TextInput
           label="Senha"
-          secureTextEntry={showPassword}
-          value={password}
-          onChangeText={text => setPassword(text)}
+          secureTextEntry={state.showPassword}
+          value={state.password}
+          onChangeText={text => handleChange('password', text)}
           right={
             <TextInput.Icon
-              icon={showPassword ? 'eye' : 'eye-off'}
-              onPress={() => setShowPassword(prev => !prev)}
+              icon={state.showPassword ? 'eye' : 'eye-off'}
+              onPress={toggleShowPassword}
             />
           }
         />
@@ -79,15 +119,15 @@ export function RegisterScreen({ navigation }) {
           buttonColor="#193073"
           textColor="white"
           onPress={handleRegister}
-          loading={loading}
+          loading={state.loading}
         >
           Cadastrar
         </Button>
       </View>
 
-      {error && (
+      {state.error && (
         <Text variant="labelLarge" style={styles.error}>
-          {error}!
+          {state.error}!
         </Text>
       )}
     </SafeAreaView>

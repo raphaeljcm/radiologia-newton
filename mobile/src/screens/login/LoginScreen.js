@@ -1,36 +1,56 @@
+import React, { useReducer } from 'react';
 import { View, StyleSheet, Image, Text, Alert } from 'react-native';
 import { Button, TextInput } from 'react-native-paper';
-import { useState } from 'react';
-import { api } from '../../lib/axios';
 import logo from '../../../assets/radiologia.png';
 import { AppError } from '../../utils/AppError';
+import { useAuthContext } from '../../contexts/AuthContext';
+import { useNavigation } from '@react-navigation/native';
 
-export function LoginScreen({ navigation }) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [showPassword, setShowPassword] = useState(true);
-  const [loading, setLoading] = useState(false);
+const initialState = {
+  email: '',
+  password: '',
+  error: '',
+  showPassword: true,
+  loading: false,
+};
+
+function reducer(state, action) {
+  switch (action.type) {
+    case 'updateField':
+      return { ...state, [action.field]: action.value };
+    case 'setError':
+      return { ...state, error: action.error };
+    case 'setLoading':
+      return { ...state, loading: action.loading };
+    case 'reset':
+      return initialState;
+    default:
+      return state;
+  }
+}
+
+export function LoginScreen() {
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const { onSignIn } = useAuthContext();
+  const navigation = useNavigation();
 
   async function handleLogin() {
+    const { email, password } = state;
+
     if (!email || !password) {
-      setError('Preencha todos os campos');
+      dispatch({ type: 'setError', error: 'Preencha todos os campos' });
       return;
     }
 
     try {
-      setError('');
-      setLoading(true);
+      dispatch({ type: 'setError', error: '' });
+      dispatch({ type: 'setLoading', loading: true });
 
-      await api.post('/login', {
-        email,
-        password,
-      });
+      await onSignIn(email, password);
 
-      setLoading(false);
-      navigation.navigate('home');
+      dispatch({ type: 'setLoading', loading: false });
     } catch (err) {
-      setLoading(false);
+      dispatch({ type: 'setLoading', loading: false });
 
       const isAppError = err instanceof AppError;
       const title = isAppError
@@ -52,18 +72,28 @@ export function LoginScreen({ navigation }) {
       <View style={styles.actionContainer}>
         <TextInput
           label="E-mail"
-          value={email}
-          onChangeText={text => setEmail(text)}
+          value={state.email}
+          onChangeText={text =>
+            dispatch({ type: 'updateField', field: 'email', value: text })
+          }
         />
         <TextInput
           label="Senha"
-          secureTextEntry={showPassword}
-          value={password}
-          onChangeText={text => setPassword(text)}
+          secureTextEntry={state.showPassword}
+          value={state.password}
+          onChangeText={text =>
+            dispatch({ type: 'updateField', field: 'password', value: text })
+          }
           right={
             <TextInput.Icon
-              icon={showPassword ? 'eye' : 'eye-off'}
-              onPress={() => setShowPassword(prev => !prev)}
+              icon={state.showPassword ? 'eye' : 'eye-off'}
+              onPress={() =>
+                dispatch({
+                  type: 'updateField',
+                  field: 'showPassword',
+                  value: !state.showPassword,
+                })
+              }
             />
           }
         />
@@ -72,7 +102,7 @@ export function LoginScreen({ navigation }) {
           buttonColor="#193073"
           textColor="white"
           onPress={handleLogin}
-          loading={loading}
+          loading={state.loading}
         >
           Entrar
         </Button>
@@ -85,7 +115,7 @@ export function LoginScreen({ navigation }) {
           Cadastre-se
         </Button>
 
-        {!!error && <Text style={styles.error}>{error}</Text>}
+        {!!state.error && <Text style={styles.error}>{state.error}</Text>}
       </View>
     </View>
   );

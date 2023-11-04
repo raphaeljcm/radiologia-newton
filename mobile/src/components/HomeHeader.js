@@ -1,5 +1,5 @@
-import { Image, StyleSheet, View } from 'react-native';
-import { Button, Text } from 'react-native-paper';
+import { StyleSheet, View } from 'react-native';
+import { Avatar, Button, Text } from 'react-native-paper';
 import { useAuthContext } from '../contexts/AuthContext';
 
 export function HomeHeader() {
@@ -8,10 +8,9 @@ export function HomeHeader() {
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
-        <Image
+        <Avatar.Image
           source={{ uri: 'https://github.com/raphaeljcm.png' }}
           style={styles.image}
-          alt="user image"
         />
 
         <View style={styles.contentContainer}>
@@ -41,11 +40,6 @@ const styles = StyleSheet.create({
     flex: 1,
     height: '100%',
   },
-  image: {
-    width: 80,
-    height: 80,
-    borderRadius: 9999,
-  },
   contentContainer: {
     justifyContent: 'center',
     alignItems: 'flex-start',
@@ -54,5 +48,8 @@ const styles = StyleSheet.create({
   name: {
     fontWeight: 'bold',
     color: '#fff',
+  },
+  image: {
+    marginLeft: 12,
   },
 });

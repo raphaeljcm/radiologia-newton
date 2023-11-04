@@ -1,6 +1,6 @@
 import { useReducer } from 'react';
 import { View, StyleSheet, Alert } from 'react-native';
-import { Button, Text, TextInput } from 'react-native-paper';
+import { Button, HelperText, Text, TextInput } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { api } from '../../lib/axios';
 import { AppError } from '../../utils/AppError';
@@ -36,9 +36,9 @@ export function RegisterScreen() {
   const navigation = useNavigation();
 
   async function handleRegister() {
-    const { name, email, ra, password } = state;
+    const { name, email, password } = state;
 
-    if (!name || !email || !ra || !password) {
+    if (!name || !email || !password) {
       dispatch({ type: 'setError', error: 'Preencha todos os campos' });
       return;
     }
@@ -50,7 +50,7 @@ export function RegisterScreen() {
       await api.post('/register', {
         name,
         email,
-        ra,
+        ra: state.ra ? state.ra : null,
         password,
         image: null,
       });
@@ -87,12 +87,12 @@ export function RegisterScreen() {
 
       <View style={styles.actionContainer}>
         <TextInput
-          label="Nome"
+          label="Nome*"
           onChangeText={text => handleChange('name', text)}
           value={state.name}
         />
         <TextInput
-          label="E-mail"
+          label="E-mail*"
           onChangeText={text => handleChange('email', text)}
           value={state.email}
         />
@@ -102,7 +102,7 @@ export function RegisterScreen() {
           value={state.ra}
         />
         <TextInput
-          label="Senha"
+          label="Senha*"
           secureTextEntry={state.showPassword}
           value={state.password}
           onChangeText={text => handleChange('password', text)}
@@ -125,11 +125,9 @@ export function RegisterScreen() {
         </Button>
       </View>
 
-      {state.error && (
-        <Text variant="labelLarge" style={styles.error}>
-          {state.error}!
-        </Text>
-      )}
+      <HelperText type="error" visible={!!state.error}>
+        {state.error}
+      </HelperText>
     </SafeAreaView>
   );
 }
@@ -146,9 +144,5 @@ const styles = StyleSheet.create({
   actionContainer: {
     gap: 20,
     width: '100%',
-  },
-  error: {
-    color: '#193073',
-    margin: 0,
   },
 });

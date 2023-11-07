@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { queryDatabase } from '../db';
+import { compare } from 'bcrypt';
 
 type User = {
   id: number;
@@ -28,7 +29,9 @@ export async function login(req: Request, res: Response) {
 
     const user = users[0] as User;
 
-    if (password !== user.password) {
+    const match = await compare(password, user.password);
+
+    if (!match) {
       return res.status(404).json({ error: 'Email or password invalid!' });
     }
 

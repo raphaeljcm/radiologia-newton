@@ -9,7 +9,9 @@ export function HomeHeader() {
     <View style={styles.container}>
       <View style={styles.imageContainer}>
         <Avatar.Image
-          source={{ uri: 'https://github.com/raphaeljcm.png' }}
+          source={{
+            uri: `data:image/jpg;base64,${user.image}`,
+          }}
           style={styles.image}
         />
 

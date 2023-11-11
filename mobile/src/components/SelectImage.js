@@ -9,18 +9,18 @@ export function SelectImage({ onImageChange }) {
   const handleImagePicker = async () => {
     try {
       let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
         aspect: [4, 3],
         quality: 1,
+        base64: true,
       });
 
       if (result.canceled) {
         throw new Error('Seleção de imagem cancelada.');
       }
-
       setImage(result.assets[0].uri);
-      onImageChange(result.assets[0].uri);
+      onImageChange(result.assets[0].base64);
     } catch (err) {
       Alert.alert(err.message);
     }

@@ -83,11 +83,9 @@ export function RegisterScreen() {
     });
   };
 
-  const handleImageChange = async imageUri => {
+  const handleImageChange = async base64Image => {
     try {
-      const response = await fetch(imageUri);
-      const blob = await response.blob();
-      dispatch({ type: 'updateField', field: 'image', value: blob });
+      dispatch({ type: 'updateField', field: 'image', value: base64Image });
     } catch (err) {
       Alert.alert(err.message);
     }

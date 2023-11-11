@@ -42,8 +42,9 @@ export async function register(req: Request, res: Response) {
     }
 
     const passwordHash = await hash(password, 8);
+    const bufferedImage = Buffer.from(image, 'base64');
 
-    create(name, passwordHash, ra, email, image);
+    create(name, passwordHash, ra, email, bufferedImage);
 
     res.status(201).send();
   } catch (err) {
@@ -175,7 +176,7 @@ async function create(
   password: string,
   ra: string,
   email: string,
-  image: string,
+  image: Buffer,
 ): Promise<void> {
   await queryDatabase(
     `INSERT INTO users (name, password, ra, email, user_type_id, created_at, last_access, image)

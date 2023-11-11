@@ -45,6 +45,7 @@ export async function login(req: Request, res: Response) {
       user: {
         email: user.email,
         name: user.name,
+        image: user.image.toString('base64'),
       },
     };
 

@@ -4,6 +4,7 @@ import { Button, HelperText, Text, TextInput } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { api } from '../../lib/axios';
 import { AppError } from '../../utils/AppError';
+import { SelectImage } from '../../components/SelectImage';
 import { useNavigation } from '@react-navigation/native';
 
 const INITIAL_STATE = {
@@ -11,6 +12,7 @@ const INITIAL_STATE = {
   email: '',
   ra: '',
   password: '',
+  image: '',
   showPassword: true,
   error: '',
   loading: false,
@@ -25,7 +27,7 @@ function reducer(state, action) {
     case 'setLoading':
       return { ...state, loading: action.loading };
     case 'reset':
-      return initialState;
+      return INITIAL_STATE;
     default:
       return state;
   }
@@ -52,7 +54,7 @@ export function RegisterScreen() {
         email,
         ra: state.ra ? state.ra : null,
         password,
-        image: null,
+        image: state?.image ? state.image : null,
       });
 
       dispatch({ type: 'setLoading', loading: false });
@@ -81,11 +83,23 @@ export function RegisterScreen() {
     });
   };
 
+  const handleImageChange = async imageUri => {
+    try {
+      const response = await fetch(imageUri);
+      const blob = await response.blob();
+      dispatch({ type: 'updateField', field: 'image', value: blob });
+    } catch (err) {
+      Alert.alert(err.message);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <Text variant="headlineLarge">Cadastre-se</Text>
 
       <View style={styles.actionContainer}>
+        <SelectImage onImageChange={handleImageChange} />
+
         <TextInput
           label="Nome*"
           onChangeText={text => handleChange('name', text)}

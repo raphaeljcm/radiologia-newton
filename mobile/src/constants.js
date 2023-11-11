@@ -190,66 +190,67 @@ export const MENU_ITEMS = {
           },
         },
       },
-      'Alterações Dentárias': {
-        label: 'Alterações Dentárias',
-        icon: 'alteracoes-icon',
+    },
+  },
+
+  'Alterações Dentárias': {
+    label: 'Alterações Dentárias',
+    icon: 'alteracoes-icon',
+    hasSubmenu: true,
+    children: {
+      'Alterações de Número': {
+        label: 'Alterações de Número',
+        icon: 'numero-icon',
         hasSubmenu: true,
         children: {
-          'Alterações de Número': {
-            label: 'Alterações de Número',
-            icon: 'numero-icon',
-            hasSubmenu: true,
-            children: {
-              Agenesia: {
-                label: 'Agenesia',
-                icon: 'agenesia-icon',
-                hasSubmenu: false,
-              },
-              'Dente Supranumerário': {
-                label: 'Dente Supranumerário',
-                icon: 'supranumerario-icon',
-                hasSubmenu: false,
-              },
-            },
+          Agenesia: {
+            label: 'Agenesia',
+            icon: 'agenesia-icon',
+            hasSubmenu: false,
+          },
+          'Dente Supranumerário': {
+            label: 'Dente Supranumerário',
+            icon: 'supranumerario-icon',
+            hasSubmenu: false,
           },
         },
-        'Alterações de Tamanho': {
-          label: 'Alterações de Tamanho',
-          icon: 'tamanho-icon',
-          hasSubmenu: true,
-          children: {
-            Microdontia: {
-              label: 'Microdontia',
-              icon: 'microdontia-icon',
-              hasSubmenu: false,
-            },
-            Macrodontia: {
-              label: 'Macrodontia',
-              icon: 'macrodontia-icon',
-              hasSubmenu: false,
-            },
+      },
+      'Alterações de Tamanho': {
+        label: 'Alterações de Tamanho',
+        icon: 'tamanho-icon',
+        hasSubmenu: true,
+        children: {
+          Microdontia: {
+            label: 'Microdontia',
+            icon: 'microdontia-icon',
+            hasSubmenu: false,
+          },
+          Macrodontia: {
+            label: 'Macrodontia',
+            icon: 'macrodontia-icon',
+            hasSubmenu: false,
           },
         },
-        'Alterações de Forma': {
-          label: 'Alterações de Forma',
-          icon: 'forma-icon',
-          hasSubmenu: true,
-          children: {
-            Geminação: {
-              label: 'Geminação',
-              icon: 'geminacao-icon',
-              hasSubmenu: false,
-            },
-            Fusão: {
-              label: 'Fusão',
-              icon: 'fusao-icon',
-              hasSubmenu: false,
-            },
-            Concrescência: {
-              label: 'Concrescência',
-              icon: 'concrescencia-icon',
-              hasSubmenu: false,
-            },
+      },
+      'Alterações de Forma': {
+        label: 'Alterações de Forma',
+        icon: 'forma-icon',
+        hasSubmenu: true,
+        children: {
+          Geminação: {
+            label: 'Geminação',
+            icon: 'geminacao-icon',
+            hasSubmenu: false,
+          },
+          Fusão: {
+            label: 'Fusão',
+            icon: 'fusao-icon',
+            hasSubmenu: false,
+          },
+          Concrescência: {
+            label: 'Concrescência',
+            icon: 'concrescencia-icon',
+            hasSubmenu: false,
           },
         },
       },

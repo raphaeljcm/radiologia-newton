@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
 import { queryDatabase } from '../db';
 import { hash } from 'bcrypt';
+import { uploadImage } from './uploadImgBB';
+import { IncomingForm } from 'formidable';
 
 enum UserType {
   DEFAULT = 1,
@@ -23,52 +25,67 @@ const INTERNAL_SERVER_ERROR_MESSAGE =
   'Internal Server ERROR! Contact the admin.';
 
 export async function register(req: Request, res: Response) {
-  const { name, password, ra, email, image } = req.body;
+  const form = new IncomingForm();
 
-  try {
-    const errorMessage = validateFields(name, password, ra, email);
-    if (errorMessage !== null) {
-      return res.status(400).json({ error: errorMessage });
+  form.parse(req, async (err, fields) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: INTERNAL_SERVER_ERROR_MESSAGE });
     }
 
-    const raExists = await validateRAExists(ra);
-    if (raExists) {
-      return res.status(400).json({ error: EXISTING_RA_ERROR_MESSAGE });
+    const { name, password, ra, email, image } = fields;
+
+    try {
+      const errorMessage = validateFields(name, password, ra, email, image);
+      if (errorMessage !== null) {
+        return res.status(400).json({ error: errorMessage });
+      }
+
+      const raExists = await validateRAExists(ra);
+      if (raExists) {
+        return res.status(400).json({ error: EXISTING_RA_ERROR_MESSAGE });
+      }
+
+      const emailExists = await validateEmailExists(email);
+      if (emailExists) {
+        return res.status(400).json({ error: EXISTING_EMAIL_ERROR_MESSAGE });
+      }
+
+      const passwordHash = await encryptPassword(password);
+      const imageUrl = await uploadImageToImgBB(image);
+
+      create(name, passwordHash, ra, email, imageUrl);
+
+      res.status(201).send();
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({ error: INTERNAL_SERVER_ERROR_MESSAGE });
     }
-
-    const emailExists = await validateEmailExists(email);
-    if (emailExists) {
-      return res.status(400).json({ error: EXISTING_EMAIL_ERROR_MESSAGE });
-    }
-
-    const passwordHash = await hash(password, 8);
-    const bufferedImage = image ? Buffer.from(image, 'base64') : null;
-
-    create(name, passwordHash, ra, email, bufferedImage);
-
-    res.status(201).send();
-  } catch (err) {
-    return res.status(500).json({ error: INTERNAL_SERVER_ERROR_MESSAGE });
-  }
+  });
 }
 
 function validateFields(
-  name: string,
-  password: string,
-  ra: string,
-  email: string,
+  name: any,
+  password: any,
+  ra: any,
+  email: any,
+  image: any,
 ): string | null {
-  const error = validateUndefinedFields(name, password, ra, email);
+  const error = validateUndefinedFields(name, password, ra, email, image);
   if (error !== null) {
     return error;
   }
 
-  const nullErrorMessage = validateNullFields(name, password, email);
+  const nullErrorMessage = validateNullFields(name[0], password[0], email[0]);
   if (nullErrorMessage !== null) {
     return nullErrorMessage;
   }
 
-  const fieldLengthErrorMessage = validateFieldLengths(name, ra, password);
+  const fieldLengthErrorMessage = validateFieldLengths(
+    name[0],
+    ra[0],
+    password[0],
+  );
   if (fieldLengthErrorMessage !== null) {
     return fieldLengthErrorMessage;
   }
@@ -77,16 +94,18 @@ function validateFields(
 }
 
 function validateUndefinedFields(
-  name: string,
-  password: string,
-  ra: string,
-  email: string,
+  name: any,
+  password: any,
+  ra: any,
+  email: any,
+  image: any,
 ): string | null {
   const undefinedFields = [];
   if (name === undefined) undefinedFields.push('name');
   if (password === undefined) undefinedFields.push('password');
   if (ra === undefined) undefinedFields.push('ra');
   if (email === undefined) undefinedFields.push('email');
+  if (image === undefined) undefinedFields.push('image');
 
   if (undefinedFields.length > 0) {
     const errorMessage =
@@ -142,7 +161,7 @@ function validateFieldLengths(
   return null;
 }
 
-async function validateRAExists(ra: string): Promise<boolean> {
+async function validateRAExists(ra: any): Promise<boolean> {
   if (ra === null) {
     return false;
   }
@@ -158,7 +177,7 @@ async function validateRAExists(ra: string): Promise<boolean> {
   return false;
 }
 
-async function validateEmailExists(email: string): Promise<boolean> {
+async function validateEmailExists(email: any): Promise<boolean> {
   const foundEmail = await queryDatabase(
     'SELECT * FROM users u WHERE u.email = ?',
     [email],
@@ -172,15 +191,28 @@ async function validateEmailExists(email: string): Promise<boolean> {
 }
 
 async function create(
-  name: string,
-  password: string,
-  ra: string,
-  email: string,
-  image: Buffer | null,
+  name: any,
+  password: any,
+  ra: any,
+  email: any,
+  image: any | null,
 ): Promise<void> {
   await queryDatabase(
     `INSERT INTO users (name, password, ra, email, user_type_id, created_at, last_access, image)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
     [name, password, ra, email, UserType.DEFAULT, new Date(), null, image],
   );
+}
+
+async function encryptPassword(password: any): Promise<string> {
+  return await hash(password, 8);
+}
+
+async function uploadImageToImgBB(image: any): Promise<string | null> {
+  const bufferedImage = bufferImage(image);
+  return bufferedImage ? await uploadImage(bufferedImage) : null;
+}
+
+function bufferImage(image: string): Buffer | null {
+  return image ? Buffer.from(image, 'base64') : null;
 }

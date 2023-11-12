@@ -15,6 +15,7 @@
     "@types/express": "^4.17.20",
     "@types/formidable": "^3.4.5",
     "@types/jsonwebtoken": "^9.0.4",
+    "@types/multer": "^1.4.10",
     "@types/node": "^20.8.9",
     "eslint-config-js-stack": "^1.0.5",
     "tsx": "^3.14.0",
@@ -28,6 +29,7 @@
     "express": "^4.18.2",
     "formidable": "^3.5.1",
     "jsonwebtoken": "^9.0.2",
+    "multer": "^1.4.5-lts.1",
     "mysql2": "^3.6.2"
   }
 }

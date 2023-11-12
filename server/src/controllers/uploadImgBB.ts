@@ -4,12 +4,10 @@ import FormData from 'form-data';
 const SUSCESSFUL_UPLOAD = 'Upload successful:';
 const ERROR_UPLOADING_IMAGE = 'Error uploading image:';
 
-const apiKey = process.env.IMGBB_API_KEY;
-
 export const uploadImage = async (imageData: Buffer) => {
   try {
     const formData = new FormData();
-    formData.append('key', apiKey);
+    formData.append('key', process.env.IMGBB_API_KEY);
     formData.append('image', imageData.toString('base64'));
 
     const response = await axios.post(

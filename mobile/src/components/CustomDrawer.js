@@ -25,7 +25,7 @@ export function CustomDrawer(props) {
         onPress={handleHeaderPress}
       >
         <Avatar.Image
-          source={{ uri: `data:image/jpg;base64,${user.image}` }}
+          source={{ uri: `${user.image}` }}
           size={40}
           style={styles.image}
         />

@@ -60,10 +60,7 @@ export function EditScreen({ route }) {
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
-        <Avatar.Image
-          source={{ uri: `data:image/jpg;base64,${user.image}` }}
-          size={70}
-        />
+        <Avatar.Image source={{ uri: `${user.image}` }} size={70} />
 
         <SelectImage />
       </View>

@@ -20,10 +20,7 @@ export function ProfileScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
-        <Avatar.Image
-          source={{ uri: `data:image/jpg;base64,${user.image}` }}
-          size={70}
-        />
+        <Avatar.Image source={{ uri: `${user.image}` }} size={70} />
 
         <Text style={styles.name}>Olá, {user.name}</Text>
       </View>

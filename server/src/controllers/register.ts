@@ -66,13 +66,13 @@ function validateFields(
   image: string | null,
 ) {
   const error = validateUndefinedFields(name, password, ra, email, image);
-  if (!error) return error;
+  if (error) return error;
 
   const nullErrorMessage = validateNullFields(name, password, email);
-  if (!nullErrorMessage) return nullErrorMessage;
+  if (nullErrorMessage) return nullErrorMessage;
 
   const fieldLengthErrorMessage = validateFieldLengths(name, ra, password);
-  if (!fieldLengthErrorMessage) return fieldLengthErrorMessage;
+  if (fieldLengthErrorMessage) return fieldLengthErrorMessage;
 
   return null;
 }

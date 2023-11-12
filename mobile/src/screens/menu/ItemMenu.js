@@ -31,6 +31,6 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   selected: {
-    backgroundColor: 'blue',
+    backgroundColor: '#27A4F2',
   },
 });

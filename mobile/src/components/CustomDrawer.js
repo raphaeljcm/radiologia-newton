@@ -25,7 +25,7 @@ export function CustomDrawer(props) {
         <DrawerItemList {...props} />
       </DrawerContentScrollView>
 
-      <View style={styles.view}>
+      <View style={[styles.view, styles.footerContainer]}>
         <Button icon="logout" textColor="#193073" onPress={onSignOut}>
           Logout
         </Button>
@@ -38,29 +38,31 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: StatusBar.currentHeight,
+    borderRadius: 10,
   },
   scrollView: {
     backgroundColor: '#fff',
-    borderRadius: 10,
-    marginHorizontal: 10,
-    marginVertical: 5,
     paddingHorizontal: 5,
   },
   view: {
     backgroundColor: '#fff',
-    borderRadius: 10,
-    marginHorizontal: 10,
-    marginVertical: 5,
     padding: 15,
   },
   headerContainer: {
     flexDirection: 'row',
     gap: 12,
+    borderTopRightRadius: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
   },
   name: {
     fontWeight: 'bold',
     color: '#193073',
     alignSelf: 'center',
   },
-  footerContainer: {},
+  footerContainer: {
+    borderTopWidth: 1,
+    borderTopColor: '#ddd',
+    borderBottomRightRadius: 10,
+  },
 });

@@ -22,7 +22,18 @@ const OPTIONS = {
 
 export function AppRoutes() {
   return (
-    <Navigator initialRouteName="main">
+    <Navigator
+      initialRouteName="main"
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: '#27A4F2',
+        },
+        headerTitleStyle: {
+          color: 'white',
+        },
+        headerTintColor: 'white',
+      }}
+    >
       <Screen name="main" component={DrawerRoutes} options={OPTIONS.drawer} />
       <Screen name="menu" component={MenuScreen} options={OPTIONS.menu} />
       <Screen name="xray" component={XRayScreen} options={OPTIONS.xray} />

@@ -5,11 +5,8 @@ import { Text } from 'react-native-paper';
 export function MenuItem({ title, icon, onPress }) {
   return (
     <TouchableOpacity style={styles.menuItem} onPress={onPress}>
-      <Ionicons name={icon} size={54} color="black" />
-      <Text
-        variant="titleMedium"
-        style={{ color: '#022132', textAlign: 'center' }}
-      >
+      <Ionicons name={icon} size={54} color="#193073" />
+      <Text variant="titleMedium" style={styles.menuItemText}>
         {title}
       </Text>
     </TouchableOpacity>
@@ -18,16 +15,21 @@ export function MenuItem({ title, icon, onPress }) {
 
 export const styles = StyleSheet.create({
   menuItem: {
-    backgroundColor: '#f5bd69',
-    width: 134,
-    height: 130,
-    borderRadius: 24,
-    shadowColor: 'black',
-    elevation: 5,
-    shadowOffset: { width: 10, height: 10 },
-    shadowOpacity: 0.2,
-    justifyContent: 'center',
+    flexDirection: 'row',
     alignItems: 'center',
+    gap: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 20,
+    backgroundColor: '#27A4F2',
+    borderRadius: 15,
+    elevation: 5,
     margin: 10,
+    borderWidth: 2,
+    borderColor: '#193073',
+  },
+  menuItemText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });

@@ -5,13 +5,25 @@ import {
 import { StatusBar, StyleSheet, Text, View } from 'react-native';
 import { Avatar, Button } from 'react-native-paper';
 import { useAuthContext } from '../contexts/AuthContext';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { useNavigation } from '@react-navigation/native';
 
 export function CustomDrawer(props) {
   const { user, onSignOut } = useAuthContext();
+  const navigation = useNavigation();
+
+  const handleHeaderPress = () => {
+    navigation.navigate('profile');
+  };
 
   return (
     <View style={styles.container}>
-      <View style={[styles.view, styles.headerContainer]}>
+      <TouchableOpacity
+        style={[styles.view, styles.headerContainer]}
+        underlayColor="white"
+        activeOpacity={0.9}
+        onPress={handleHeaderPress}
+      >
         <Avatar.Image
           source={{ uri: `data:image/jpg;base64,${user.image}` }}
           size={40}
@@ -19,7 +31,7 @@ export function CustomDrawer(props) {
         />
 
         <Text style={styles.name}>Olá, {user.name}</Text>
-      </View>
+      </TouchableOpacity>
 
       <DrawerContentScrollView style={styles.scrollView} {...props}>
         <DrawerItemList {...props} />

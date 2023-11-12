@@ -12,7 +12,7 @@ export function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.content}>
+      <View>
         <FlatList
           data={Object.values(MENU_ITEMS)}
           renderItem={({ item }) => (
@@ -23,7 +23,6 @@ export function HomeScreen() {
             />
           )}
           keyExtractor={item => item.label}
-          numColumns={2}
         />
       </View>
     </View>
@@ -33,10 +32,5 @@ export function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-  },
-  content: {
-    flex: 1,
-    padding: 20,
   },
 });

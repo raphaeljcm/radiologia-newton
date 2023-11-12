@@ -1,7 +1,7 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { HomeScreen } from '../screens/home/HomeScreen';
 import { MenuScreen } from '../screens/menu/MenuScreen';
 import { XRayScreen } from '../screens/xray/XRayScreen';
+import { DrawerRoutes } from './drawer.routes';
 
 const { Navigator, Screen } = createNativeStackNavigator();
 
@@ -15,12 +15,15 @@ const OPTIONS = {
   xray: {
     title: 'Raio-X',
   },
+  drawer: {
+    headerShown: false,
+  },
 };
 
 export function AppRoutes() {
   return (
-    <Navigator>
-      <Screen name="home" component={HomeScreen} options={OPTIONS.home} />
+    <Navigator initialRouteName="main">
+      <Screen name="main" component={DrawerRoutes} options={OPTIONS.drawer} />
       <Screen name="menu" component={MenuScreen} options={OPTIONS.menu} />
       <Screen name="xray" component={XRayScreen} options={OPTIONS.xray} />
     </Navigator>

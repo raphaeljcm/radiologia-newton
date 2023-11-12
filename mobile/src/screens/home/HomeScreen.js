@@ -2,7 +2,6 @@ import { FlatList, StyleSheet, View } from 'react-native';
 import { MenuItem } from './MenuItem';
 import { MENU_ITEMS } from '../../constants';
 import { useNavigation } from '@react-navigation/native';
-import { HomeHeader } from '../../components/HomeHeader';
 
 export function HomeScreen() {
   const navigation = useNavigation();
@@ -13,8 +12,6 @@ export function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      <HomeHeader />
-
       <View style={styles.content}>
         <FlatList
           data={Object.values(MENU_ITEMS)}

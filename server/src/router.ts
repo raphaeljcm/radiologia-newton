@@ -1,4 +1,4 @@
-import { Request, Response, Router } from 'express';
+import { Request, Response, Router, urlencoded } from 'express';
 import { login } from './controllers/login';
 import { register } from './controllers/register';
 import { getImages } from './controllers/getImages';

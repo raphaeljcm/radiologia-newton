@@ -24,4 +24,3 @@ router.get('/testAuth', ensureAuth, (req: Request, res: Response) =>
 router.get('/images', ensureAuth, getImages);
 
 router.get('/users/:id', ensureAuth, getUserById);
-

@@ -3,6 +3,7 @@ import { Request, Response, Router } from 'express';
 import { login } from './controllers/login';
 import { register } from './controllers/register';
 import { getImages } from './controllers/getImages';
+import { getUserById } from './controllers/getUserById';
 import { ensureAuth } from './middlewares/ensureAuth';
 
 export const router = Router();
@@ -21,3 +22,6 @@ router.get('/testAuth', ensureAuth, (req: Request, res: Response) =>
 );
 
 router.get('/images', ensureAuth, getImages);
+
+router.get('/users/:id', ensureAuth, getUserById);
+

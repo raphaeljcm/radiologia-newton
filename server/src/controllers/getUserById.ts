@@ -49,7 +49,7 @@ export const getUserById = async (req: Request, res: Response) => {
   }
 };
 
-function createResponse(user: User) : UserResponse {
+function createResponse(user: User) {
   const response: UserResponse = {
     id: user.id,
     name: user.name,

@@ -5,6 +5,7 @@ import { Feather } from '@expo/vector-icons';
 import { AboutScreen } from '../screens/about/AboutScreen';
 import { ContactScreen } from '../screens/contact/ContactScreen';
 import { TermsScreen } from '../screens/terms/TermsScreen';
+import { ExamsScreen } from '../screens/exams/ExamsScreen';
 
 const { Navigator, Screen } = createDrawerNavigator();
 
@@ -68,6 +69,17 @@ export function DrawerRoutes() {
           ),
           drawerLabel: 'Termos de Uso',
           title: 'Termos de Uso',
+        }}
+      />
+      <Screen
+        name="exams"
+        component={ExamsScreen}
+        options={{
+          drawerIcon: ({ size, color }) => (
+            <Feather name="edit-3" size={size} color={color} />
+          ),
+          drawerLabel: 'Testes',
+          title: 'Testes',
         }}
       />
     </Navigator>

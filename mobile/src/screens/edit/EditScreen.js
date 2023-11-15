@@ -1,5 +1,5 @@
 import { Alert, StyleSheet, View } from 'react-native';
-import { Avatar, Button, TextInput } from 'react-native-paper';
+import { Button, TextInput } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { useReducer } from 'react';
 import { SelectImage } from '../../components/SelectImage';
@@ -75,9 +75,10 @@ export function EditScreen({ route }) {
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
-        <Avatar.Image source={{ uri: `${userData.image}` }} size={70} />
-
-        <SelectImage onImageChange={handleImageChange} />
+        <SelectImage
+          onImageChange={handleImageChange}
+          initialImage={userData.image}
+        />
       </View>
 
       <View style={styles.fields}>

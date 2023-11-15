@@ -16,13 +16,14 @@ export function MenuScreen({ route }) {
 
   const navigation = useNavigation();
 
-  const handleItemSelection = item => {
+  const handleItemSelection = async item => {
     if (item.label === selectedItem) return;
 
     if (item && item.children) {
       setSecondFlatListData(Object.values(item.children));
     } else {
-      Alert.alert(`Let's fetch data about: ${item.label}`);
+      const imageData = await getImages(item.label);
+      navigation.navigate('xray', { images: imageData });
     }
 
     setSelectedItem(item.label);

@@ -3,8 +3,8 @@ import { Button } from 'react-native-paper';
 import { Alert, Image, StyleSheet, View } from 'react-native';
 import { useState } from 'react';
 
-export function SelectImage({ onImageChange }) {
-  const [image, setImage] = useState(null);
+export function SelectImage({ onImageChange, initialImage }) {
+  const [image, setImage] = useState(initialImage);
 
   const handleImagePicker = async () => {
     try {

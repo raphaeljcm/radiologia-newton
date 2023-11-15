@@ -156,10 +156,16 @@ async function encryptPassword(password: string) {
 }
 
 export async function uploadImageToImgBB(image?: string) {
-  const bufferedImage = bufferImage(image);
-  return bufferedImage ? await uploadImage(bufferedImage) : null;
+  if (!image) return null;
+  if (isURLImage(image)) return image;
+
+  const bufferedImage = Buffer.from(image, 'base64');
+  return await uploadImage(bufferedImage);
 }
 
-function bufferImage(image?: string) {
-  return image ? Buffer.from(image, 'base64') : null;
+function isURLImage(image?: string) {
+  if (!image) return false;
+  if (image.includes('https://i.ibb')) return true;
+
+  return false;
 }

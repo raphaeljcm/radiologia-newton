@@ -2,6 +2,9 @@ import { Alert, FlatList, StyleSheet, View } from 'react-native';
 import { Button, Text } from 'react-native-paper';
 import { ItemMenu } from './ItemMenu';
 import { useState } from 'react';
+import { api } from '../../lib/axios';
+import { AppError } from '../../utils/AppError';
+import { useNavigation } from '@react-navigation/native';
 
 export function MenuScreen({ route }) {
   const { selectedItems } = route.params;
@@ -10,6 +13,8 @@ export function MenuScreen({ route }) {
   );
   const [secondFlatListData, setSecondFlatListData] = useState([]);
   const [selectedItem, setSelectedItem] = useState('');
+
+  const navigation = useNavigation();
 
   const handleItemSelection = item => {
     if (item.label === selectedItem) return;
@@ -23,13 +28,28 @@ export function MenuScreen({ route }) {
     setSelectedItem(item.label);
   };
 
-  const handleSecondLevelItemClick = item => {
+  const handleSecondLevelItemClick = async item => {
     if (item && item.children) {
       setFirstFlatListData(secondFlatListData);
       setSecondFlatListData(Object.values(item.children));
       setSelectedItem(item.label);
     } else {
-      Alert.alert(`Let's fetch data about: ${item.label}`);
+      const imageData = await getImages(item.label);
+      navigation.navigate('xray', { images: imageData });
+    }
+  };
+
+  const getImages = async accessGroup => {
+    try {
+      const { data } = await api.get(`/images?accessGroup=${accessGroup}`);
+      return data;
+    } catch (err) {
+      const isAppError = err instanceof AppError;
+      const title = isAppError
+        ? err.message
+        : 'Não foi possível carregar as imagens. Tente novamente mais tarde.';
+
+      Alert.alert(title);
     }
   };
 

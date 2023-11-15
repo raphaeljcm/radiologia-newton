@@ -9,7 +9,7 @@ export async function register(req: Request, res: Response) {
   const { name, password, ra, email, image } = req.body as Fields;
 
   try {
-    const errorMessage = validateFields(name, password, ra, email, image);
+    const errorMessage = validateFields(name, password, email, ra);
     if (errorMessage) return res.status(400).json({ error: errorMessage });
 
     const raExists = await validateRAExists(ra);
@@ -27,7 +27,7 @@ export async function register(req: Request, res: Response) {
     const passwordHash = await encryptPassword(password);
     const imageUrl = await uploadImageToImgBB(image);
 
-    create(name, passwordHash, ra, email, imageUrl);
+    create(name, passwordHash, email, imageUrl, ra);
 
     res.status(201).send();
   } catch (err) {
@@ -41,58 +41,24 @@ export async function register(req: Request, res: Response) {
 function validateFields(
   name: string,
   password: string,
-  ra: string | null,
   email: string,
-  image: string | null,
+  ra?: string,
 ) {
-  const error = validateUndefinedFields(name, password, ra, email, image);
-  if (error) return error;
-
   const nullErrorMessage = validateNullFields(name, password, email);
   if (nullErrorMessage) return nullErrorMessage;
 
   const fieldLengthErrorMessage = validateFieldLengths(
     name,
-    ra,
     password,
     email,
+    ra,
   );
   if (fieldLengthErrorMessage) return fieldLengthErrorMessage;
 
   return null;
 }
 
-function validateUndefinedFields(
-  name: string,
-  password: string,
-  ra: string | null,
-  email: string,
-  image: string | null,
-): string | null {
-  const undefinedFields = [];
-  if (name === undefined) undefinedFields.push('name');
-  if (password === undefined) undefinedFields.push('password');
-  if (ra === undefined) undefinedFields.push('ra');
-  if (email === undefined) undefinedFields.push('email');
-  if (image === undefined) undefinedFields.push('image');
-
-  if (undefinedFields.length > 0) {
-    const errorMessage =
-      undefinedFields.length === 1
-        ? `Field '${undefinedFields[0]}' is undefined.`
-        : `Fields [${undefinedFields.join(', ')}] are undefined.`;
-
-    return errorMessage;
-  }
-
-  return null;
-}
-
-function validateNullFields(
-  name: string,
-  password: string,
-  email: string,
-): string | null {
+function validateNullFields(name: string, password: string, email: string) {
   const nullFields = [];
   if (name === null) nullFields.push('name');
   if (password === null) nullFields.push('password');
@@ -112,15 +78,15 @@ function validateNullFields(
 
 function validateFieldLengths(
   name: string,
-  ra: string | null,
   password: string,
   email: string,
+  ra?: string,
 ) {
   if (name.length > messages.USER_NAME_MAX_LENGTH) {
     return messages.BIG_NAME_ERROR_MESSAGE;
   }
 
-  if (ra !== null && ra.length !== messages.RA_LENGTH) {
+  if (!!ra && ra.length !== messages.RA_LENGTH) {
     return messages.WRONG_RA_SIZE_ERROR_MESSAGE;
   }
 
@@ -135,7 +101,7 @@ function validateFieldLengths(
   return null;
 }
 
-export async function validateRAExists(ra: string | null) {
+export async function validateRAExists(ra?: string) {
   if (!ra) return false;
 
   const foundRA = await queryDatabase('SELECT * FROM users u WHERE u.ra = ?', [
@@ -165,14 +131,23 @@ export async function validateEmailExists(email: string) {
 async function create(
   name: string,
   password: string,
-  ra: string | null,
   email: string,
   image: string | null,
-): Promise<void> {
+  ra?: string,
+) {
   await queryDatabase(
     `INSERT INTO users (name, password, ra, email, user_type_id, created_at, last_access, image)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-    [name, password, ra, email, UserType.DEFAULT, new Date(), null, image],
+    [
+      name,
+      password,
+      ra ? ra : null,
+      email,
+      UserType.DEFAULT,
+      new Date(),
+      null,
+      image,
+    ],
   );
 }
 
@@ -180,11 +155,11 @@ async function encryptPassword(password: string) {
   return await hash(password, 8);
 }
 
-export async function uploadImageToImgBB(image: string | null) {
+export async function uploadImageToImgBB(image?: string) {
   const bufferedImage = bufferImage(image);
   return bufferedImage ? await uploadImage(bufferedImage) : null;
 }
 
-function bufferImage(image: string | null) {
+function bufferImage(image?: string) {
   return image ? Buffer.from(image, 'base64') : null;
 }

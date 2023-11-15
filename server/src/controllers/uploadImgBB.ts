@@ -2,7 +2,7 @@ import axios from 'axios';
 import FormData from 'form-data';
 import * as messages from '../constants/messages';
 
-export const uploadImage = async (imageData: Buffer) => {
+export const uploadImage = async (imageData: Buffer): Promise<string> => {
   try {
     const formData = new FormData();
     formData.append('key', process.env.IMGBB_API_KEY);

@@ -1,8 +1,6 @@
 import axios from 'axios';
 import FormData from 'form-data';
-
-const SUSCESSFUL_UPLOAD = 'Upload successful:';
-const ERROR_UPLOADING_IMAGE = 'Error uploading image:';
+import * as messages from "./messages";
 
 export const uploadImage = async (imageData: Buffer) => {
   try {
@@ -20,10 +18,10 @@ export const uploadImage = async (imageData: Buffer) => {
       },
     );
 
-    console.log(SUSCESSFUL_UPLOAD, response.data);
+    console.log(messages.SUSCESSFUL_UPLOAD, response.data);
     return response.data.data.url;
   } catch (error) {
-    console.error(ERROR_UPLOADING_IMAGE, error);
+    console.error(messages.ERROR_UPLOADING_IMAGE, error);
     throw error;
   }
 };

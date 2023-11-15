@@ -45,7 +45,7 @@ export async function login(req: Request, res: Response) {
       user: {
         email: user.email,
         name: user.name,
-        image: user.image.toString('base64'),
+        image: user.image ? user.image.toString('base64') : null,
       },
     };
 
@@ -55,6 +55,7 @@ export async function login(req: Request, res: Response) {
 
     return res.json(tokenReturn);
   } catch (err) {
+    console.error(err);
     return res.status(500).json({ error: 'Internal Server ERROR.' });
   }
 }

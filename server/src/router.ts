@@ -4,6 +4,7 @@ import { login } from './controllers/login';
 import { register } from './controllers/register';
 import { getImages } from './controllers/getImages';
 import { getUserById } from './controllers/getUserById';
+import { updateUserById } from './controllers/updateUserById';
 import { ensureAuth } from './middlewares/ensureAuth';
 
 export const router = Router();
@@ -24,3 +25,5 @@ router.get('/testAuth', ensureAuth, (req: Request, res: Response) =>
 router.get('/images', ensureAuth, getImages);
 
 router.get('/users/:id', ensureAuth, getUserById);
+
+router.put('/users/:id', ensureAuth, upload.array('files'), updateUserById);

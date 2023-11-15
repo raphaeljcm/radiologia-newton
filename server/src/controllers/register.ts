@@ -2,8 +2,8 @@ import { Request, Response } from 'express';
 import { queryDatabase } from '../db';
 import { hash } from 'bcrypt';
 import { uploadImage } from './uploadImgBB';
-import { UserType, Fields } from '../Types';
-import * as messages from "../constants/messages";
+import { UserType, Fields } from '../types';
+import * as messages from '../constants/messages';
 
 export async function register(req: Request, res: Response) {
   const { name, password, ra, email, image } = req.body as Fields;
@@ -14,11 +14,15 @@ export async function register(req: Request, res: Response) {
 
     const raExists = await validateRAExists(ra);
     if (raExists)
-      return res.status(400).json({ error: messages.EXISTING_RA_ERROR_MESSAGE });
+      return res
+        .status(400)
+        .json({ error: messages.EXISTING_RA_ERROR_MESSAGE });
 
     const emailExists = await validateEmailExists(email);
     if (emailExists)
-      return res.status(400).json({ error: messages.EXISTING_EMAIL_ERROR_MESSAGE });
+      return res
+        .status(400)
+        .json({ error: messages.EXISTING_EMAIL_ERROR_MESSAGE });
 
     const passwordHash = await encryptPassword(password);
     const imageUrl = await uploadImageToImgBB(image);
@@ -28,7 +32,9 @@ export async function register(req: Request, res: Response) {
     res.status(201).send();
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ error: messages.INTERNAL_SERVER_ERROR_MESSAGE });
+    return res
+      .status(500)
+      .json({ error: messages.INTERNAL_SERVER_ERROR_MESSAGE });
   }
 }
 
@@ -45,7 +51,12 @@ function validateFields(
   const nullErrorMessage = validateNullFields(name, password, email);
   if (nullErrorMessage) return nullErrorMessage;
 
-  const fieldLengthErrorMessage = validateFieldLengths(name, ra, password, email);
+  const fieldLengthErrorMessage = validateFieldLengths(
+    name,
+    ra,
+    password,
+    email,
+  );
   if (fieldLengthErrorMessage) return fieldLengthErrorMessage;
 
   return null;
@@ -120,7 +131,6 @@ function validateFieldLengths(
   if (email.length === 0) {
     return messages.INVALID_EMAIL_ERROR_MESSAGE;
   }
-
 
   return null;
 }

@@ -2,8 +2,8 @@ import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { queryDatabase } from '../db';
 import { compare } from 'bcrypt';
-import { UserLogin } from '../Types';
-import * as messages from "../constants/messages";
+import { UserLogin } from '../types';
+import * as messages from '../constants/messages';
 
 export async function login(req: Request, res: Response) {
   const { email, password } = req.body;
@@ -15,7 +15,9 @@ export async function login(req: Request, res: Response) {
     );
 
     if (!users || users.length === 0) {
-      return res.status(404).json({ error: messages.INVALID_EMAIL_OR_PASSWORD_ERROR_MESSAGE });
+      return res
+        .status(404)
+        .json({ error: messages.INVALID_EMAIL_OR_PASSWORD_ERROR_MESSAGE });
     }
 
     const user = users[0] as UserLogin;
@@ -23,7 +25,9 @@ export async function login(req: Request, res: Response) {
     const match = await compare(password, user.password);
 
     if (!match) {
-      return res.status(404).json({ error: messages.INVALID_EMAIL_OR_PASSWORD_ERROR_MESSAGE });
+      return res
+        .status(404)
+        .json({ error: messages.INVALID_EMAIL_OR_PASSWORD_ERROR_MESSAGE });
     }
 
     const token = jwt.sign({}, process.env.JWT_SECRET!, {

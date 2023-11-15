@@ -2,17 +2,8 @@ import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { queryDatabase } from '../db';
 import { compare } from 'bcrypt';
-
-type User = {
-  id: number;
-  name: string;
-  password: string;
-  ra: string;
-  email: string;
-  userType: string;
-  image: Buffer;
-  creationDate: Date;
-};
+import { UserLogin } from '../Types';
+import * as messages from "../constants/messages";
 
 export async function login(req: Request, res: Response) {
   const { email, password } = req.body;
@@ -24,15 +15,15 @@ export async function login(req: Request, res: Response) {
     );
 
     if (!users || users.length === 0) {
-      return res.status(404).json({ error: 'Email or password invalid!' });
+      return res.status(404).json({ error: messages.INVALID_EMAIL_OR_PASSWORD_ERROR_MESSAGE });
     }
 
-    const user = users[0] as User;
+    const user = users[0] as UserLogin;
 
     const match = await compare(password, user.password);
 
     if (!match) {
-      return res.status(404).json({ error: 'Email or password invalid!' });
+      return res.status(404).json({ error: messages.INVALID_EMAIL_OR_PASSWORD_ERROR_MESSAGE });
     }
 
     const token = jwt.sign({}, process.env.JWT_SECRET!, {
@@ -45,7 +36,7 @@ export async function login(req: Request, res: Response) {
       user: {
         email: user.email,
         name: user.name,
-        image: user.image.toString('base64'),
+        image: user.image ? user.image.toString('base64') : null,
       },
     };
 
@@ -55,6 +46,7 @@ export async function login(req: Request, res: Response) {
 
     return res.json(tokenReturn);
   } catch (err) {
+    console.error(err);
     return res.status(500).json({ error: 'Internal Server ERROR.' });
   }
 }

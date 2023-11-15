@@ -38,6 +38,7 @@ export async function login(req: Request, res: Response) {
     const tokenReturn = {
       token,
       user: {
+        id: user.id,
         email: user.email,
         name: user.name,
         image: user.image ? user.image.toString('base64') : null,

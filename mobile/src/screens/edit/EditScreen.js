@@ -1,10 +1,10 @@
-import { StyleSheet, View } from 'react-native';
+import { Alert, StyleSheet, View } from 'react-native';
 import { Avatar, Button, TextInput } from 'react-native-paper';
-import { useAuthContext } from '../../contexts/AuthContext';
 import { useNavigation } from '@react-navigation/native';
 import { useReducer } from 'react';
 import { SelectImage } from '../../components/SelectImage';
 import { AppError } from '../../utils/AppError';
+import { api } from '../../lib/axios';
 
 function reducer(state, action) {
   switch (action.type) {
@@ -29,25 +29,28 @@ export function EditScreen({ route }) {
     error: '',
     loading: false,
   };
-
   const [state, dispatch] = useReducer(reducer, initialState);
-  const { user } = useAuthContext();
   const navigation = useNavigation();
 
-  const handleSaveButtonPress = () => {
+  const handleSaveButtonPress = async () => {
     const { name, email, ra, image } = state;
 
     try {
       dispatch({ type: 'setError', error: '' });
       dispatch({ type: 'setLoading', loading: true });
 
-      // TODO: save user data
+      const formData = new FormData();
+      formData.append('name', name);
+      formData.append('email', email);
+      if (ra) formData.append('ra', ra);
+      if (image) formData.append('image', image);
+
+      await api.put(`/users/${userData.id}`, formData);
 
       dispatch({ type: 'setLoading', loading: false });
       navigation.goBack();
-    } catch {
+    } catch (err) {
       dispatch({ type: 'setLoading', loading: false });
-
       const isAppError = err instanceof AppError;
       const title = isAppError
         ? err.message
@@ -57,35 +60,41 @@ export function EditScreen({ route }) {
     }
   };
 
+  const handleChange = (field, value) => {
+    dispatch({ type: 'updateField', field, value });
+  };
+
+  const handleImageChange = async base64Image => {
+    try {
+      handleChange('image', base64Image);
+    } catch (err) {
+      Alert.alert(err.message);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
-        <Avatar.Image source={{ uri: `${user.image}` }} size={70} />
+        <Avatar.Image source={{ uri: `${userData.image}` }} size={70} />
 
-        <SelectImage />
+        <SelectImage onImageChange={handleImageChange} />
       </View>
 
       <View style={styles.fields}>
         <TextInput
-          value={user.email}
+          value={state.email}
           label="Email"
-          onChangeText={text =>
-            dispatch({ type: 'updateField', field: 'email', value: text })
-          }
+          onChangeText={text => handleChange('email', text)}
         />
         <TextInput
-          value={user.name}
+          value={state.name}
           label="nome"
-          onChangeText={text =>
-            dispatch({ type: 'updateField', field: 'name', value: text })
-          }
+          onChangeText={text => handleChange('name', text)}
         />
         <TextInput
-          value="12109453"
+          value={state.ra}
           label="ra"
-          onChangeText={text =>
-            dispatch({ type: 'updateField', field: 'ra', value: text })
-          }
+          onChangeText={text => handleChange('ra', text)}
         />
       </View>
 
@@ -95,6 +104,7 @@ export function EditScreen({ route }) {
         textColor="#193073"
         buttonColor="white"
         loading={state.loading}
+        disabled={state.loading}
         onPress={handleSaveButtonPress}
       >
         Salvar alterações

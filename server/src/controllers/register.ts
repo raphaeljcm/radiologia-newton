@@ -27,7 +27,7 @@ export async function register(req: Request, res: Response) {
     const passwordHash = await encryptPassword(password);
     const imageUrl = await uploadImageToImgBB(image);
 
-    create(name, passwordHash, email, imageUrl, ra);
+    await create(name, passwordHash, email, imageUrl, ra);
 
     res.status(201).send();
   } catch (err) {

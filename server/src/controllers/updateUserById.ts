@@ -43,7 +43,7 @@ export const updateUserById = async (req: Request, res: Response) => {
     }
 
     const imageUrl = await uploadImageToImgBB(image);
-    update(id, name, email, imageUrl, ra);
+    await update(id, name, email, imageUrl, ra);
 
     const updatedUser = await queryDatabase(
       'SELECT * FROM users u WHERE u.id = ?',

@@ -22,8 +22,8 @@ router.get('/testAuth', ensureAuth, (req: Request, res: Response) =>
   res.send('auth is working'),
 );
 
-router.get('/images', ensureAuth, getImages);
+router.get('/images', getImages);
 
-router.get('/users/:id', ensureAuth, getUserById);
+router.get('/users/:id', getUserById);
 
-router.put('/users/:id', ensureAuth, upload.array('files'), updateUserById);
+router.put('/users/:id', upload.array('files'), updateUserById);

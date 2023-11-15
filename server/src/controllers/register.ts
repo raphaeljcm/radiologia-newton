@@ -2,9 +2,8 @@ import { Request, Response } from 'express';
 import { queryDatabase } from '../db';
 import { hash } from 'bcrypt';
 import { uploadImage } from './uploadImgBB';
-import { UserType } from './UserType';
-import { Fields } from './Fields';
-import * as messages from "./messages";
+import { UserType, Fields } from '../Types';
+import * as messages from "../constants/messages";
 
 export async function register(req: Request, res: Response) {
   const { name, password, ra, email, image } = req.body as Fields;

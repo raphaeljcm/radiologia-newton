@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { queryDatabase } from '../db';
-import * as messages from "./messages";
+import * as messages from "../constants/messages";
 
 export const getImages = async (req: Request, res: Response) => {
   const accesGroup = req.query.accessGroup;

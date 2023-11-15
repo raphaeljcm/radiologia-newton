@@ -1,11 +1,8 @@
 import { Request, Response } from "express";
 import { queryDatabase } from "../db";
-import * as messages from "./messages";
+import * as messages from "../constants/messages";
 import { validateRAExists, validateEmailExists, uploadImageToImgBB } from "./register";
-import { User } from "./User";
-import { Fields } from "./Fields";
-
-type UserResponse = Omit<User, "password" | "created_at" | "last_access">;
+import { User, Fields } from "../Types";
 
 export const updateUserById = async (req: Request, res: Response) => {
   const id = req.params.id;
@@ -140,7 +137,5 @@ function createUserResponse(user: User) {
     email: user.email,
     user_type_id: user.user_type_id,
     image: user.image,
-    created_at: user.created_at,
-    last_access: user.last_access,
-  } as UserResponse;
+  };
 }

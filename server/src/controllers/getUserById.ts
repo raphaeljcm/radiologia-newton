@@ -1,9 +1,7 @@
 import { Request, Response } from "express";
 import { queryDatabase } from "../db";
-import { User } from "./User";
-import * as messages from "./messages";
-
-type UserResponse = Omit<User, "password">;
+import { User } from "../Types";
+import * as messages from "../constants/messages";
 
 export const getUserById = async (req: Request, res: Response) => {
   const id = req.params.id;
@@ -34,5 +32,5 @@ function createUserResponse(user: User) {
     image: user.image,
     created_at: user.created_at,
     last_access: user.last_access,
-  } as UserResponse;
+  };
 }

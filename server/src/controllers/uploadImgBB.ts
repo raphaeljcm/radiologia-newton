@@ -1,6 +1,6 @@
 import axios from 'axios';
 import FormData from 'form-data';
-import * as messages from "./messages";
+import * as messages from "../constants/messages";
 
 export const uploadImage = async (imageData: Buffer) => {
   try {

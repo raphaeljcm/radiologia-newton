@@ -14,3 +14,4 @@ export const IMAGE_NOT_FOUND_ERROR_MESSAGE = 'No image found!';
 export const WRONG_PASSWORD_SIZE_ERROR_MESSAGE = 'Your password must be at least 6 characters long.';
 export const SUSCESSFUL_UPLOAD = 'Upload successful:';
 export const ERROR_UPLOADING_IMAGE = 'Error uploading image:';
+export const INVALID_EMAIL_OR_PASSWORD_ERROR_MESSAGE = 'Email or password invalid!';

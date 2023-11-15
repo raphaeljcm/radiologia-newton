@@ -20,7 +20,7 @@ export const updateUserById = async (req: Request, res: Response) => {
     if (user.length === 0)
       res.status(404).json({ error: messages.USER_NOT_FOUND_ERROR_MESSAGE });
 
-    const undefinedFields = validateFields(name, ra, email, image);
+    const undefinedFields = validateFields(name, email, ra);
     if (undefinedFields)
       return res.status(400).json({ error: undefinedFields });
 
@@ -37,7 +37,7 @@ export const updateUserById = async (req: Request, res: Response) => {
         .json({ error: messages.EXISTING_EMAIL_ERROR_MESSAGE });
 
     const imageUrl = await uploadImageToImgBB(image);
-    update(id, name, ra, email, imageUrl);
+    update(id, name, email, imageUrl, ra);
 
     const updatedUser = await queryDatabase(
       'SELECT * FROM users u WHERE u.id = ?',
@@ -53,52 +53,20 @@ export const updateUserById = async (req: Request, res: Response) => {
   }
 };
 
-function validateFields(
-  name: string,
-  ra: string | null,
-  email: string,
-  image: string | null,
-) {
-  const error = validateUndefinedFields(name, ra, email, image);
-  if (error) return error;
-
+function validateFields(name: string, email: string, ra?: string) {
   const nullErrorMessage = validateNullFields(name, email);
   if (nullErrorMessage) return nullErrorMessage;
 
-  const fieldLengthErrorMessage = validateFieldLengths(name, ra, email);
+  const fieldLengthErrorMessage = validateFieldLengths(name, email, ra);
   if (fieldLengthErrorMessage) return fieldLengthErrorMessage;
 
   return null;
 }
 
-function validateUndefinedFields(
-  name: string,
-  ra: string | null,
-  email: string,
-  image: string | null,
-): string | null {
-  const undefinedFields = [];
-  if (name === undefined) undefinedFields.push('name');
-  if (ra === undefined) undefinedFields.push('ra');
-  if (email === undefined) undefinedFields.push('email');
-  if (image === undefined) undefinedFields.push('image');
-
-  if (undefinedFields.length > 0) {
-    const errorMessage =
-      undefinedFields.length === 1
-        ? `Field '${undefinedFields[0]}' is undefined.`
-        : `Fields [${undefinedFields.join(', ')}] are undefined.`;
-
-    return errorMessage;
-  }
-
-  return null;
-}
-
-function validateNullFields(name: string, email: string): string | null {
+function validateNullFields(name: string, email: string) {
   const nullFields = [];
-  if (name === null) nullFields.push('name');
-  if (email === null) nullFields.push('email');
+  if (!name) nullFields.push('name');
+  if (!email) nullFields.push('email');
 
   if (nullFields.length > 0) {
     const errorMessage =
@@ -112,11 +80,11 @@ function validateNullFields(name: string, email: string): string | null {
   return null;
 }
 
-function validateFieldLengths(name: string, ra: string | null, email: string) {
+function validateFieldLengths(name: string, email: string, ra?: string) {
   if (name.length > messages.USER_NAME_MAX_LENGTH)
     return messages.BIG_NAME_ERROR_MESSAGE;
 
-  if (ra !== null && ra.length !== messages.RA_LENGTH)
+  if (!!ra && ra.length !== messages.RA_LENGTH)
     return messages.WRONG_RA_SIZE_ERROR_MESSAGE;
 
   if (email.length === 0) return messages.INVALID_EMAIL_ERROR_MESSAGE;
@@ -127,13 +95,13 @@ function validateFieldLengths(name: string, ra: string | null, email: string) {
 async function update(
   id: string,
   name: string,
-  ra: string | null,
   email: string,
   image: string | null,
+  ra?: string,
 ): Promise<void> {
   await queryDatabase(
     `UPDATE users u SET u.name = ?, u.ra = ?, u.email = ?, u.image = ? WHERE u.id = ?`,
-    [name, ra, email, image, Number.parseInt(id)],
+    [name, ra ? ra : null, email, image, Number.parseInt(id)],
   );
 }
 

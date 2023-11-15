@@ -49,13 +49,14 @@ export function RegisterScreen() {
       dispatch({ type: 'setError', error: '' });
       dispatch({ type: 'setLoading', loading: true });
 
-      await api.post('/register', {
-        name,
-        email,
-        ra: state.ra ? state.ra : null,
-        password,
-        image: state?.image ? state.image : null,
-      });
+      const formData = new FormData();
+      formData.append('name', name);
+      formData.append('email', email);
+      formData.append('password', password);
+      if (state.ra) formData.append('ra', state.ra);
+      if (state.image) formData.append('image', state.image);
+
+      await api.post('/register', formData);
 
       dispatch({ type: 'setLoading', loading: false });
       navigation.navigate('login');

@@ -30,6 +30,15 @@ export function AuthContextProvider({ children }) {
     }
   };
 
+  const handleStorageNewUserData = async user => {
+    try {
+      setUser(user);
+      await storageUserSave(user);
+    } catch (error) {
+      throw error;
+    }
+  };
+
   const handleSignIn = async (email, password) => {
     try {
       const { data } = await api.post('/login', {
@@ -77,6 +86,7 @@ export function AuthContextProvider({ children }) {
         user,
         onSignIn: handleSignIn,
         onSignOut: handleSignOut,
+        onUpdateUserData: handleStorageNewUserData,
       }}
     >
       {children}

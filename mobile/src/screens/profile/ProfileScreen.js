@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native';
 import { Avatar, Button, TextInput } from 'react-native-paper';
 import { useAuthContext } from '../../contexts/AuthContext';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { useEffect, useState } from 'react';
 import { AppError } from '../../utils/AppError';
 import { api } from '../../lib/axios';
@@ -11,6 +11,7 @@ export function ProfileScreen() {
   const [userData, setUserData] = useState({});
   const { user } = useAuthContext();
   const navigation = useNavigation();
+  const isFocused = useIsFocused();
 
   const handleEditButtonPress = () => {
     navigation.navigate('edit', {
@@ -37,8 +38,8 @@ export function ProfileScreen() {
       }
     };
 
-    getUserData();
-  }, [user.id]);
+    if (isFocused) getUserData();
+  }, [user.id, isFocused]);
 
   return (
     <View style={styles.container}>

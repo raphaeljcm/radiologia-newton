@@ -5,6 +5,7 @@ import { useReducer } from 'react';
 import { SelectImage } from '../../components/SelectImage';
 import { AppError } from '../../utils/AppError';
 import { api } from '../../lib/axios';
+import { useAuthContext } from '../../contexts/AuthContext';
 
 function reducer(state, action) {
   switch (action.type) {
@@ -31,6 +32,7 @@ export function EditScreen({ route }) {
   };
   const [state, dispatch] = useReducer(reducer, initialState);
   const navigation = useNavigation();
+  const { onUpdateUserData } = useAuthContext();
 
   const handleSaveButtonPress = async () => {
     const { name, email, ra, image } = state;
@@ -45,10 +47,10 @@ export function EditScreen({ route }) {
       if (ra) formData.append('ra', ra);
       if (image) formData.append('image', image);
 
-      await api.put(`/users/${userData.id}`, formData);
-
+      const { data } = await api.put(`/users/${userData.id}`, formData);
+      await onUpdateUserData(data);
       dispatch({ type: 'setLoading', loading: false });
-      navigation.goBack();
+      navigation.navigate('profile');
     } catch (err) {
       dispatch({ type: 'setLoading', loading: false });
       const isAppError = err instanceof AppError;

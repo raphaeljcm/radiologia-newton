@@ -1,46 +1,52 @@
-import { Request, Response } from 'express';
-import { queryDatabase } from '../db';
-import * as messages from '../constants/messages';
+import { Request, Response } from "express";
+import { queryDatabase } from "../db";
+import * as messages from "../constants/messages";
 import {
   validateRAExists,
   validateEmailExists,
   uploadImageToImgBB,
-} from './register';
-import { User, Fields } from '../types';
+} from "./register";
+import { User, Fields } from "../types";
 
 export const updateUserById = async (req: Request, res: Response) => {
   const id = req.params.id;
   const { name, email, ra, image } = req.body as Fields;
 
   try {
-    const user = await queryDatabase('SELECT * FROM users u WHERE u.id = ?', [
+    const user = await queryDatabase("SELECT * FROM users u WHERE u.id = ?", [
       id,
     ]);
 
     if (user.length === 0)
       res.status(404).json({ error: messages.USER_NOT_FOUND_ERROR_MESSAGE });
 
+    const foundUser = user[0];
+
     const undefinedFields = validateFields(name, email, ra);
     if (undefinedFields)
       return res.status(400).json({ error: undefinedFields });
 
-    const raExists = await validateRAExists(ra);
-    if (raExists)
-      return res
-        .status(400)
-        .json({ error: messages.EXISTING_RA_ERROR_MESSAGE });
+    if (ra !== foundUser.ra) {
+      const raExists = await validateRAExists(ra);
+      if (raExists)
+        return res
+          .status(400)
+          .json({ error: messages.EXISTING_RA_ERROR_MESSAGE });
+    }
 
-    const emailExists = await validateEmailExists(email);
-    if (emailExists)
-      return res
-        .status(400)
-        .json({ error: messages.EXISTING_EMAIL_ERROR_MESSAGE });
-
+    if (email !== foundUser.email) {
+      const emailExists = await validateEmailExists(email);
+      if (emailExists)
+        return res
+          .status(400)
+          .json({ error: messages.EXISTING_EMAIL_ERROR_MESSAGE });
+    }
+    
     const imageUrl = await uploadImageToImgBB(image);
     update(id, name, email, imageUrl, ra);
 
     const updatedUser = await queryDatabase(
-      'SELECT * FROM users u WHERE u.id = ?',
+      "SELECT * FROM users u WHERE u.id = ?",
       [id],
     );
 
@@ -65,14 +71,14 @@ function validateFields(name: string, email: string, ra?: string) {
 
 function validateNullFields(name: string, email: string) {
   const nullFields = [];
-  if (!name) nullFields.push('name');
-  if (!email) nullFields.push('email');
+  if (!name) nullFields.push("name");
+  if (!email) nullFields.push("email");
 
   if (nullFields.length > 0) {
     const errorMessage =
       nullFields.length === 1
         ? `Field '${nullFields[0]}' is mandatory.`
-        : `Fields [${nullFields.join(', ')}] are mandatories.`;
+        : `Fields [${nullFields.join(", ")}] are mandatories.`;
 
     return errorMessage;
   }

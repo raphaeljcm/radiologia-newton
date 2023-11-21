@@ -1,7 +1,16 @@
 import * as ImagePicker from 'expo-image-picker';
+import * as FileSystem from 'expo-file-system';
 import { Button } from 'react-native-paper';
 import { Alert, Image, StyleSheet, View } from 'react-native';
 import { useState } from 'react';
+
+const getFileInfo = async uri => {
+  return await FileSystem.getInfoAsync(uri);
+};
+
+export const isLessThanTheMB = (fileSize, smallerThanSizeMB) => {
+  return fileSize / 1024 / 1024 < smallerThanSizeMB;
+};
 
 export function SelectImage({ onImageChange, initialImage }) {
   const [image, setImage] = useState(initialImage);
@@ -19,8 +28,17 @@ export function SelectImage({ onImageChange, initialImage }) {
       if (result.canceled) {
         throw new Error('Seleção de imagem cancelada.');
       }
-      setImage(result.assets[0].uri);
-      onImageChange(result.assets[0].base64);
+
+      const image = result.assets[0];
+
+      const fileInfo = await getFileInfo(image.uri);
+      if (!fileInfo.size) throw new Error('Imagem inválida.');
+      console.log(fileInfo.size);
+      const isLT15MB = isLessThanTheMB(fileInfo.size, 1.5);
+      if (!isLT15MB) throw new Error('Imagem muito grande.');
+
+      setImage(image.uri);
+      onImageChange(image.base64);
     } catch (err) {
       Alert.alert(err.message);
     }

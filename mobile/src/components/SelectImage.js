@@ -25,15 +25,13 @@ export function SelectImage({ onImageChange, initialImage }) {
         base64: true,
       });
 
-      if (result.canceled) {
-        throw new Error('Seleção de imagem cancelada.');
-      }
+      if (result.canceled) throw new Error('Seleção de imagem cancelada.');
 
       const image = result.assets[0];
 
       const fileInfo = await getFileInfo(image.uri);
       if (!fileInfo.size) throw new Error('Imagem inválida.');
-      console.log(fileInfo.size);
+
       const isLT15MB = isLessThanTheMB(fileInfo.size, 1.5);
       if (!isLT15MB) throw new Error('Imagem muito grande.');
 

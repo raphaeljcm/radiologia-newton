@@ -22,8 +22,7 @@ export function MenuScreen({ route }) {
     if (item && item.children) {
       setSecondFlatListData(Object.values(item.children));
     } else {
-      const imageData = await getImages(item.label);
-      navigation.navigate('xray', { images: imageData });
+      await handleXrayNavigate(item.label);
     }
 
     setSelectedItem(item.label);
@@ -35,15 +34,14 @@ export function MenuScreen({ route }) {
       setSecondFlatListData(Object.values(item.children));
       setSelectedItem(item.label);
     } else {
-      const imageData = await getImages(item.label);
-      navigation.navigate('xray', { images: imageData });
+      await handleXrayNavigate(item.label);
     }
   };
 
-  const getImages = async accessGroup => {
+  const handleXrayNavigate = async accessGroup => {
     try {
       const { data } = await api.get(`/images?accessGroup=${accessGroup}`);
-      return data;
+      navigation.navigate('xray', { images: data });
     } catch (err) {
       const isAppError = err instanceof AppError;
       const title = isAppError

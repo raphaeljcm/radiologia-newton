@@ -44,78 +44,78 @@ export const MENU_ITEMS = {
             icon: 'crista-icon',
             hasSubmenu: false,
           },
-          Maxila: {
-            label: 'Maxila',
-            icon: 'maxila-icon',
-            hasSubmenu: true,
-            children: {
-              'Sutura Intermaxilar': {
-                label: 'Sutura Intermaxilar',
-                icon: 'sutura-icon',
-                hasSubmenu: false,
-              },
-              'Forame Incisivo': {
-                label: 'Forame Incisivo',
-                icon: 'forame-icon',
-                hasSubmenu: false,
-              },
-              'Cavidade Nasal': {
-                label: 'Cavidade Nasal',
-                icon: 'cavidade-icon',
-                hasSubmenu: true,
-                children: {
-                  'Septo Nasal': {
-                    label: 'Septo Nasal',
-                    icon: 'septo-icon',
-                    hasSubmenu: false,
-                  },
-                  'Espinha Nasal anterior': {
-                    label: 'Espinha Nasal anterior',
-                    icon: 'espinha-icon',
-                    hasSubmenu: false,
-                  },
-                  'Ápice do Nariz': {
-                    label: 'Ápice do Nariz',
-                    icon: 'apice-icon',
-                    hasSubmenu: false,
-                  },
-                  Narinas: {
-                    label: 'Narinas',
-                    icon: 'narinas-icon',
-                    hasSubmenu: false,
-                  },
-                },
-              },
-            },
+        },
+      },
+      Maxila: {
+        label: 'Maxila',
+        icon: 'maxila-icon',
+        hasSubmenu: true,
+        children: {
+          'Sutura Intermaxilar': {
+            label: 'Sutura Intermaxilar',
+            icon: 'sutura-icon',
+            hasSubmenu: false,
           },
-          Mandíbula: {
-            label: 'Mandíbula',
-            icon: 'mandibula-icon',
+          'Forame Incisivo': {
+            label: 'Forame Incisivo',
+            icon: 'forame-icon',
+            hasSubmenu: false,
+          },
+          'Cavidade Nasal': {
+            label: 'Cavidade Nasal',
+            icon: 'cavidade-icon',
             hasSubmenu: true,
             children: {
-              'Protuberância Mentual': {
-                label: 'Protuberância Mentual',
-                icon: 'protuberancia-icon',
+              'Septo Nasal': {
+                label: 'Septo Nasal',
+                icon: 'septo-icon',
                 hasSubmenu: false,
               },
-              'Fosseta Mentoniana': {
-                label: 'Fosseta Mentoniana',
-                icon: 'fosseta-icon',
+              'Espinha Nasal anterior': {
+                label: 'Espinha Nasal anterior',
+                icon: 'espinha-icon',
                 hasSubmenu: false,
               },
-              'Espinhas Mentonianas': {
-                label: 'Espinhas Mentonianas',
-                icon: 'espinhas-icon',
+              'Ápice do Nariz': {
+                label: 'Ápice do Nariz',
+                icon: 'apice-icon',
+                hasSubmenu: false,
+              },
+              Narinas: {
+                label: 'Narinas',
+                icon: 'narinas-icon',
                 hasSubmenu: false,
               },
             },
           },
-          Panorâmica: {
-            label: 'Panorâmica',
-            icon: 'panoramica-icon',
+        },
+      },
+      Mandíbula: {
+        label: 'Mandíbula',
+        icon: 'mandibula-icon',
+        hasSubmenu: true,
+        children: {
+          'Protuberância Mentual': {
+            label: 'Protuberância Mentual',
+            icon: 'protuberancia-icon',
+            hasSubmenu: false,
+          },
+          'Fosseta Mentoniana': {
+            label: 'Fosseta Mentoniana',
+            icon: 'fosseta-icon',
+            hasSubmenu: false,
+          },
+          'Espinhas Mentonianas': {
+            label: 'Espinhas Mentonianas',
+            icon: 'espinhas-icon',
             hasSubmenu: false,
           },
         },
+      },
+      Panorâmica: {
+        label: 'Panorâmica',
+        icon: 'panoramica-icon',
+        hasSubmenu: false,
       },
     },
   },
@@ -192,7 +192,6 @@ export const MENU_ITEMS = {
       },
     },
   },
-
   'Alterações Dentárias': {
     label: 'Alterações Dentárias',
     icon: 'alteracoes-icon',

@@ -21,7 +21,15 @@ To install and run the projects, follow these steps:
 npm install or yarn add
 ```
 
-3. Start the project using the command:
+3. Make sure to add your ipv4 address on this file, and also pay attention to the port, **it has to be the same that you are going to add on .env file of the server project!**
+
+```shellscript
+export const api = axios.create({
+  baseURL: 'http://192.168.0.34:3333',
+});
+``````
+
+4. Start the project using the command:
 
 ```shellscript
 npx expo start

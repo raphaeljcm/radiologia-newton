@@ -21,7 +21,7 @@ To install and run the projects, follow these steps:
 npm install or yarn add
 ```
 
-3. Make sure to add your ipv4 address on this file, and also pay attention to the port, **it has to be the same that you are going to add on .env file of the server project!**
+3. Make sure to add your **private** ipv4 address on this file, and also pay attention to the port, **it has to be the same that you are going to add on .env file of the server project!**
 
 ```shellscript
 export const api = axios.create({

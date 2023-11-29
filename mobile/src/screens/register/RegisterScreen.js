@@ -62,7 +62,6 @@ export function RegisterScreen() {
       navigation.navigate('login');
     } catch (err) {
       dispatch({ type: 'setLoading', loading: false });
-      dispatch({ type: 'setError', error: err.message });
 
       const isAppError = err instanceof AppError;
       const title = isAppError
